@@ -1,0 +1,8 @@
+/home/maks/RiderProjects/ServerApp/ServerApp/bin/Debug/ServerApp.exe
+/home/maks/RiderProjects/ServerApp/ServerApp/bin/Debug/ServerApp.pdb
+/home/maks/RiderProjects/ServerApp/ServerApp/bin/Debug/Lidgren.Network.dll
+/home/maks/RiderProjects/ServerApp/ServerApp/bin/Debug/Lidgren.Network.pdb
+/home/maks/RiderProjects/ServerApp/ServerApp/obj/Debug/ServerApp.csprojResolveAssemblyReference.cache
+/home/maks/RiderProjects/ServerApp/ServerApp/obj/Debug/ServerApp.csproj.CoreCompileInputs.cache
+/home/maks/RiderProjects/ServerApp/ServerApp/obj/Debug/ServerApp.exe
+/home/maks/RiderProjects/ServerApp/ServerApp/obj/Debug/ServerApp.pdb
