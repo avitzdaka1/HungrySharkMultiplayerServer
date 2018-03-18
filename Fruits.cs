@@ -23,5 +23,9 @@ namespace ServerApp
             return y;
         }
 
+        public override string ToString()
+        {
+            return "X: " + x + " Y: " + y;
+        }
     }
 }

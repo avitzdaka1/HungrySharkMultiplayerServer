@@ -7,7 +7,8 @@
         NewPlayer,
         AllPlayers,
         Fruit,
-        Eat
+        Eat,
+        AndroidLogin
         
     }
 }

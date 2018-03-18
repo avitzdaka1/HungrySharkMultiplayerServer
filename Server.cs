@@ -25,7 +25,7 @@ namespace ServerApp
            config = new NetPeerConfiguration("Sharks") { Port = 15000};
            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
            server = new NetServer(config);
-           rnd = new Random();
+            rnd = new Random((int)DateTime.Now.Ticks);
              apples = new List<Fruits>();
         }
 
@@ -37,7 +37,7 @@ namespace ServerApp
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
 
-            timer.Interval = 1000;
+            timer.Interval = 5000;
             timer.Enabled = true;
                             
                             
@@ -86,8 +86,24 @@ namespace ServerApp
                                 outmsg.Write((clients[i].Y));
                             }
 
+                            var andClient = server.CreateMessage();
+                            andClient.Write((byte)PacketType.AndroidLogin);
+                            andClient.Write(client.Id);
+                            andClient.Write(clients.Count);
+                            for (int i = 0; i < clients.Count; i++)
+                            {
+                                andClient.Write(clients[i].Id);
+                                andClient.Write(clients[i].Name);
+                                andClient.Write(clients[i].X);
+                                andClient.Write((clients[i].Y));
+                            }
+                            
                             Thread.Sleep(20);
-                            server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.Unreliable, 0);
+                            server.SendMessage(andClient, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                                
+
+                            Thread.Sleep(20);
+                            server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
                             SendNewPlayer(client,inc);
 
                             
@@ -170,9 +186,20 @@ namespace ServerApp
                     SendNewPlayer(clients[tid],inc);
                     break;
                 case PacketType.Eat:
-                    var appID = inc.ReadInt32();
-                    logData.Log(appID.ToString());
-                    apples.Remove(apples[appID]);
+                    var appX = inc.ReadDouble();
+                    var appY = inc.ReadDouble();
+                    for(int i = 0 ; i < apples.Count ; i ++)
+                        if ((int)apples[i].getX() == (int)appX && (int)apples[i].getY() == (int)appY)
+                        {
+                            apples.RemoveAt(i);
+                        }
+                    apples.Add(new Fruits(rnd.Next(0,3000),rnd.Next(2000)));
+                    logData.Log(appX.ToString() + " " + appY.ToString());
+                    for(int i = 0 ; i < apples.Count ; i ++)
+                        logData.Log(apples[i].ToString());
+
+
+
                     break;
             }
             
@@ -189,16 +216,7 @@ namespace ServerApp
                                 
             server.SendToAll(msg,inc.SenderConnection,NetDeliveryMethod.ReliableOrdered,0);
             
-            var appleMessage = server.CreateMessage();
-            appleMessage.Write((byte)PacketType.Fruit);
-            appleMessage.Write(apples.Count);
-            for (int i = 0 ; i < apples.Count ; i ++)
-            {
-                appleMessage.Write(i);
-                appleMessage.Write(apples[i].getX());
-                appleMessage.Write((apples[i].getY()));
-            }
-            server.SendToAll(appleMessage,NetDeliveryMethod.ReliableOrdered);
+            
             
         }
         
@@ -226,6 +244,18 @@ namespace ServerApp
         {
            if(apples.Count < maxFruits)
             apples.Add(new Fruits(rnd.Next(0,3000),rnd.Next(0,2000)));
+            
+            var appleMessage = server.CreateMessage();
+            appleMessage.Write((byte)PacketType.Fruit);
+            appleMessage.Write(apples.Count);
+            for (int i = 0 ; i < apples.Count ; i ++)
+            {
+                appleMessage.Write(apples[i].getX());
+                appleMessage.Write((apples[i].getY()));
+            }
+            
+            server.SendToAll(appleMessage,NetDeliveryMethod.ReliableOrdered);
+            
    
         }
         
