@@ -4,7 +4,7 @@ namespace ServerApp
 {
     public class Logger : LogBase
     {
-        private string filePath = "/home/maks/log/log.txt";
+        private string filePath = "log.txt";
 
         public override void Log(string message)
         {
