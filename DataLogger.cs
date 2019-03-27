@@ -4,7 +4,7 @@ namespace ServerApp
     
         public class DataLogger : LogBase
         {
-            private string filePath = "/home/maks/log/data.txt";
+            private string filePath = "data.txt";
 
             public override void Log(string message)
             {
